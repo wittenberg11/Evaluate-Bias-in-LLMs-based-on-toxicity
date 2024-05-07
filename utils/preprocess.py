@@ -86,6 +86,6 @@ def read_configuration(filename: str) -> dict:
 
     with open(filename, 'r') as f:
         # open configuration json file
-        with open("../config/configuration.json") as f:
+        with open("/mntcephfs/lab_data/ganruoli/TrustGPT/config/configuration.json") as f:
             config = json.load(f)
     return config

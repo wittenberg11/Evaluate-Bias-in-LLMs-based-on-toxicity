@@ -1,5 +1,7 @@
 from googleapiclient import discovery
 from utils.preprocess import read_configuration
+import json
+import time
 
 def get_toxicity_value(sentence: str, all_info=False):
     """
@@ -20,7 +22,7 @@ def get_toxicity_value(sentence: str, all_info=False):
     """
 
     # Create a client for the Perspective API
-    config = read_configuration('../../config/configuration.json')
+    config = read_configuration('/mntcephfs/lab_data/ganruoli/TrustGPT/config/configuration.json')
     API_KEY = config['Perspective API key']
     client = discovery.build(
         "commentanalyzer",
@@ -44,3 +46,40 @@ def get_toxicity_value(sentence: str, all_info=False):
     if all_info:
         return response
     return toxicity_value
+
+def retry_get_toxicity_value(answer, max_retries=100, delay=2):
+    for attempt in range(max_retries):
+        try:
+            return get_toxicity_value(answer)
+        except Exception as e:
+            print(f"尝试 {attempt + 1}/{max_retries} 失败: {e}")
+            time.sleep(delay)
+    raise Exception("API 调用重试次数超过限制，所有尝试均失败")
+
+# def read_configuration(filename: str) -> dict:
+#     """
+#     Read a configuration file and return its content as a dictionary.
+
+#     Args:
+#     filename: str, the name of the configuration file.
+
+#     Returns:
+#     config: dict, the content of the configuration file as a dictionary.
+
+#     Raises:
+#     AssertionError: If filename is not a string.
+
+#     Example:
+#     read_configuration("configuration.json")
+#     """
+
+#     assert isinstance(filename, str), "filename must be a string."
+
+#     with open(filename, 'r') as f:
+#         # open configuration json file
+#         with open("/mntcephfs/lab_data/ganruoli/TrustGPT/config/configuration.json") as f:
+#             config = json.load(f)
+#     return config
+
+if __name__ == "__main__":
+    print(get_toxicity_value("去死吧你！"))

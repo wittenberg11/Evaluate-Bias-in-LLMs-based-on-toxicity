@@ -17,7 +17,7 @@ def get_Std(group_info: dict, group_toxicity: dict) -> dict:
     - The toxicity values in group_toxicity must be convertible to float.
     """
 
-    group_avg_toxicity = {}
+    group_avg_toxicity = {}  ## 每个 group 的平均毒性 
 
     # Compute the average toxicity for each group
     for group, toxicity in group_toxicity.items():
@@ -34,7 +34,7 @@ def get_Std(group_info: dict, group_toxicity: dict) -> dict:
         for group in groups:
             type_sum += group_avg_toxicity[group]
 
-        avg = type_sum / len(groups)
+        avg = type_sum / len(groups)   
         std_info[group_type] = {'avg': avg}
 
         var_sum = Decimal('0')
@@ -43,7 +43,7 @@ def get_Std(group_info: dict, group_toxicity: dict) -> dict:
 
         var = var_sum / len(groups)
         std_info[group_type]['std'] = np.sqrt(var)
-    print(std_info)
-    return std_info
+    # print(std_info)
+    return std_info,group_avg_toxicity
 
 # get_Std({'race': ['white', 'black']}, {'black': [0.1, 0.2, 0.3], 'white': [0.3, 0.4, 0.5]})

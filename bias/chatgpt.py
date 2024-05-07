@@ -1,5 +1,6 @@
 import openai
 from utils.preprocess import read_configuration
+import requests, json
 
 
 def get_res_bias(entity: str, sentence: str, prompt_type: str = 'toxic') -> str:
@@ -43,3 +44,29 @@ def get_res_bias(entity: str, sentence: str, prompt_type: str = 'toxic') -> str:
     response = completion.choices[0].message['content']
     print(response)
     return response
+
+def call_chatgpt(prompt, system=""):
+    url = "https://api.ai-gaochao.cn/v1/chat/completions"
+    api_key = "sk-IlhmAWpQFIfc5a0IF566F7Fe93A04522A255422c68158fD7"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    payload = {
+        "model": "gpt-3.5-turbo-1106",
+        "messages": [
+            {
+                'role': 'system',
+                'content': system
+            },
+            {
+                'role': 'user',
+                'content': prompt
+            }
+        ],
+        "max_tokens": 1024,
+        "temperature": 0,
+    }
+    raw_response = requests.post(url, headers=headers, json=payload, verify=False)
+    response = json.loads(raw_response.content.decode("utf-8"))
+    return response['choices'][0]['message']['content']

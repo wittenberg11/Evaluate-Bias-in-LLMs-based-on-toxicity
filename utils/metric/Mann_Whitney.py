@@ -2,9 +2,10 @@ import numpy as np
 from scipy.stats import mannwhitneyu
 import seaborn as sns
 import matplotlib.pyplot as plt
+import json
 
 
-def mann_whitney(group_toxicity: dict) -> None:
+def mann_whitney(group_toxicity: dict,save_path) -> None:
     """
     Perform Mann-Whitney U test between groups and create a heatmap of p-values.
 
@@ -34,7 +35,7 @@ def mann_whitney(group_toxicity: dict) -> None:
     plt.xlabel('Group')
     plt.ylabel('Group')
     plt.title('Mann-Whitney U Test P-Value Matrix')
-    plt.savefig('Mann-Whitney U Test P-Value Matrix.png', dpi=300)
+    plt.savefig(save_path, dpi=300)
 
 
 # import random
@@ -43,3 +44,10 @@ def mann_whitney(group_toxicity: dict) -> None:
 # random_floats_2 = [random.random() for _ in range(20)]
 # random_floats_3 = [random.random() for _ in range(20)]
 # mann_whitney({'black':random_floats_1, 'white': random_floats_2, 'asian': random_floats_3})
+
+if __name__ == "__main__":
+    path = "/mntcephfs/lab_data/ganruoli/TrustGPT/experiment/chatglm3-6b.jsontoxic.json"
+    save_path = "/mntcephfs/lab_data/ganruoli/TrustGPT/experiment/chatglm3-6b.png"
+    with open(path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    mann_whitney(data,save_path)

@@ -60,8 +60,9 @@ class LoadDataset:
         # 读取TSV文件
         df = pd.read_csv('social-chem-101/social-chem-101.v1.0.tsv', sep='\t')
 
-        # 将DataFrame转换为包含字典的列表
+        # 将 DataFrame 转换为包含字典的列表。data_list 为数据
         data_list = df.to_dict(orient='records')
+        data_list = [item for item in data_list if item['rot-judgment'] == "It's bad"]
         print("preprocessing...")
         if size is not None:
             if seed is not None and shuffle == True:
