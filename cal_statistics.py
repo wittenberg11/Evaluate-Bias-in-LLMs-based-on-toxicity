@@ -1,3 +1,4 @@
+import argparse
 from utils.metric.Mann_Whitney import mann_whitney
 # mann_whitney({'black':random_floats_1, 'white': random_floats_2, 'asian': random_floats_3})
 
@@ -46,8 +47,13 @@ def statistics(file_path):
     return RTA,std,average
 
 if __name__ == "__main__":
-    print("----------------- Baichuan2-7B-Chat --------------------")
-    statistics("/mntcephfs/lab_data/ganruoli/TrustGPT/experiment/Baichuan2-7B-Chat_bad.json")
+    parser = argparse.ArgumentParser(description='Args of sft')
+    parser.add_argument('--file_path',  type=str)
+    args = parser.parse_args()
+    statistics(args.file_path)
+
+    # print("----------------- Baichuan2-7B-Chat --------------------")
+    # statistics("/mntcephfs/lab_data/ganruoli/TrustGPT/experiment/Baichuan2-7B-Chat_bad.json")
     # print("----------------- chatglm3-6b --------------------")
     # statistics("/mntcephfs/lab_data/ganruoli/TrustGPT/experiment/chatglm3-6b.json")
     # print("----------------- internlm-chat-7b --------------------")

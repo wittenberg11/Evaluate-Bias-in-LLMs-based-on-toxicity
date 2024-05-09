@@ -57,21 +57,21 @@ class LLM:
 
         ## 加载模型 
         if model_name == "Baichuan2-7B-Chat":
-            tokenizer = AutoTokenizer.from_pretrained("/mntcephfs/data/med/chenghao/models/Baichuan2-7B-Chat/", use_fast=False, trust_remote_code=True)
-            model = AutoModelForCausalLM.from_pretrained("/mntcephfs/data/med/chenghao/models/Baichuan2-7B-Chat/", device_map="auto", torch_dtype=torch.float16, trust_remote_code=True)
-            model.generation_config = GenerationConfig.from_pretrained("/mntcephfs/data/med/chenghao/models/Baichuan2-7B-Chat/")
+            tokenizer = AutoTokenizer.from_pretrained("baichuan-inc/Baichuan2-7B-Chat", use_fast=False, trust_remote_code=True)
+            model = AutoModelForCausalLM.from_pretrained("baichuan-inc/Baichuan2-7B-Chat", device_map="auto", torch_dtype=torch.float16, trust_remote_code=True)
+            model.generation_config = GenerationConfig.from_pretrained("baichuan-inc/Baichuan2-7B-Chat")
         elif model_name == "Qwen-7B-Chat":
-            tokenizer = AutoTokenizer.from_pretrained("/mntcephfs/data/med/fanyaxin/Qwen-7B-Chat", trust_remote_code=True)
-            model = AutoModelForCausalLM.from_pretrained("/mntcephfs/data/med/fanyaxin/Qwen-7B-Chat", device_map="auto", trust_remote_code=True).eval()
+            tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
+            model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-7B-Chat", device_map="auto", trust_remote_code=True).eval()
         elif model_name == "Yi-6B-Chat":
-            tokenizer = AutoTokenizer.from_pretrained("/mntcephfs/data/med/chenghao/models/Yi-6B-Chat", use_fast=False)
-            model = AutoModelForCausalLM.from_pretrained("/mntcephfs/data/med/chenghao/models/Yi-6B-Chat",device_map="auto",torch_dtype=torch.float16).eval()
+            tokenizer = AutoTokenizer.from_pretrained("01-ai/Yi-6B-Chat", use_fast=False)
+            model = AutoModelForCausalLM.from_pretrained("01-ai/Yi-6B-Chat",device_map="auto",torch_dtype=torch.float16).eval()
         elif model_name == "chatglm3-6b":
-            tokenizer = AutoTokenizer.from_pretrained("/mntcephfs/data/med/zhanghongbo/MOSS/junying_models/chatglm3-6b", trust_remote_code=True)
-            model = AutoModel.from_pretrained("/mntcephfs/data/med/zhanghongbo/MOSS/junying_models/chatglm3-6b", trust_remote_code=True).half().cuda().eval()
+            tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm3-6b", trust_remote_code=True)
+            model = AutoModel.from_pretrained("THUDM/chatglm3-6b", trust_remote_code=True).half().cuda().eval()
         elif model_name == "internlm-chat-7b":
-            tokenizer = AutoTokenizer.from_pretrained("/mntcephfs/data/med/chenghao/models/internlm-chat-7b", trust_remote_code=True)
-            model = AutoModelForCausalLM.from_pretrained("/mntcephfs/data/med/chenghao/models/internlm-chat-7b", torch_dtype=torch.float16, trust_remote_code=True).cuda().eval()
+            tokenizer = AutoTokenizer.from_pretrained("internlm/internlm-chat-7b", trust_remote_code=True)
+            model = AutoModelForCausalLM.from_pretrained("internlm/internlm-chat-7b", torch_dtype=torch.float16, trust_remote_code=True).cuda().eval()
 
         self.model = model
         self.tokenizer = tokenizer
@@ -94,7 +94,7 @@ class LLM:
 
 def main(model_name):
     ## 加载数据
-    bias_data = load_data_and_translate(size=200,path="/mntcephfs/lab_data/ganruoli/TrustGPT/data_trust_gpt_prompt.json")
+    bias_data = load_data_and_translate(size=200,path="data_trust_gpt_prompt.json")
     print("----------- 数据加载完毕 ------------")
     ## 加载模型
     llm = LLM(model_name=model_name)
@@ -114,7 +114,7 @@ def main(model_name):
             group_res.append(result)
         total_res[group] = group_res
     
-    experiment_result_path = "/mntcephfs/lab_data/ganruoli/TrustGPT/experiment/"+ model_name +"_bad.json"
+    experiment_result_path = "experiment/"+ model_name +"_bad.json"
     with open(experiment_result_path, 'w', encoding='utf-8') as file:
         json.dump(total_res,file,indent=4,ensure_ascii=False)
 
@@ -133,7 +133,6 @@ def main(model_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Args of sft')
-
     parser.add_argument('--model_name',  type=str)
     args = parser.parse_args()
     model_name = args.model_name
